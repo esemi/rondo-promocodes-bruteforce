@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import IntEnum, auto
+from typing import Iterator
 
 CODE_LEN = 7
 
@@ -16,7 +17,12 @@ class PromoCode:
     last_status: Status
 
 
-def gen_next_code() -> PromoCode:
-    code = 'todo'.zfill(CODE_LEN)
-    status = Status.NOT_FOUND
-    return PromoCode(code, status)
+def generate_code() -> str:
+    return 'todo'.zfill(CODE_LEN)
+
+
+def gen_next_code(limit: int) -> Iterator[PromoCode]:
+    for i in range(limit):
+        code = generate_code()
+        status = Status.NOT_FOUND
+        yield PromoCode(code, status)

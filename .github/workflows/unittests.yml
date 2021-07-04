@@ -30,6 +30,5 @@ jobs:
         poetry --version
         poetry install
 
-    - name: Run headless test
-      with:
-        run: poetry run pytest -ra -v --cov=crawler tests
+    - name: Run tests
+      run: poetry run pytest -ra -v --cov=crawler tests

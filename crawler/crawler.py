@@ -4,8 +4,9 @@ import logging
 from collections import Counter
 
 import asks
-import codes
 import trio
+
+from crawler import codes
 
 CONNECTIONS_LIMIT = 10
 

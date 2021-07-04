@@ -3,11 +3,11 @@ from crawler.crawler import determine_code_status
 from crawler.codes import Status
 
 
-def test_valid_code():
+def test_valid_json():
     pass
 
 
-def test_not_found_code():
+def test_not_found_json():
     test_response = """ucherForm: "\n\t\t<form action=\"/uzivatel/credit\" 
     method=\"post\" id=\"frm-voucherForm\" class=\"ajax\">\n\t\t<div class=\"row form-group  form-error\">\n\t\t\t
     <div class=\"col-sm-12\">\n\n\t\t\t\t<label for=\"frm-voucherForm-voucherCode\">
@@ -42,3 +42,21 @@ def test_used_code():
     r = determine_code_status(test_response)
 
     assert r == Status.ALREADY_USED
+
+
+def test_found_potentional_valid():
+    test_response = """<p class="h2">Zadejte svůj výherní kód z losu.</p>
+    <p class="error">Informace o výhře se dozvíte po <a href="/prihlasit/se?backRedir=1">přihlášení</a>.</p>"""
+
+    r = determine_code_status(test_response)
+
+    assert r == Status.FOUND
+
+
+def test_not_found_html():
+    test_response = """Zadejte svůj výherní kód</p>
+    <p class="error">Litujeme, ale tento dobíjecí kód neexistuje</p>\""""
+
+    r = determine_code_status(test_response)
+
+    assert r == Status.NOT_FOUND

@@ -4,13 +4,14 @@ import random
 import string
 from dataclasses import dataclass
 from enum import IntEnum, auto
-from typing import Iterator
+from typing import Iterator, Optional
 
 CODE_LEN = 7
 
 
 class Status(IntEnum):
     NOT_FOUND = auto()
+    FOUND = auto()
     VALID = auto()
     ALREADY_USED = auto()
 
@@ -19,6 +20,7 @@ class Status(IntEnum):
 class PromoCode:  # noqa: WPS306
     code: str
     last_status: Status
+    current_status: Optional[Status] = None
 
 
 def alphabet_permutations(repeat: int) -> itertools.product:

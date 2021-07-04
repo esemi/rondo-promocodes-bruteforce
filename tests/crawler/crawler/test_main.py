@@ -1,7 +1,11 @@
+from collections import Counter
+
+from crawler.codes import Status
 from crawler.crawler import main
 
 
 async def test_smoke():
-    res = await main(10)
+    res: Counter = await main(10)
 
-    assert res == []
+    assert res.get(Status.NOT_FOUND) == 10
+    assert sum(res.values()) == 10

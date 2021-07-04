@@ -3,24 +3,24 @@ import itertools
 import random
 import string
 from dataclasses import dataclass
-from enum import IntEnum, auto
+from enum import Enum, unique
 from typing import Iterator, Optional
 
 CODE_LEN = 7
 
 
-class Status(IntEnum):
-    NOT_FOUND = auto()
-    FOUND = auto()
-    VALID = auto()
-    ALREADY_USED = auto()
+@unique
+class Status(str, Enum):
+    NOT_FOUND = 'not_found'
+    FOUND = 'found'
+    VALID = 'valid'
+    ALREADY_USED = 'used'
 
 
 @dataclass
 class PromoCode:  # noqa: WPS306
     code: str
-    last_status: Status
-    current_status: Optional[Status] = None
+    status: Optional[Status] = None
 
 
 def alphabet_permutations(repeat: int) -> itertools.product:
@@ -33,6 +33,4 @@ def gen_next_code(limit: int) -> Iterator[PromoCode]:
     permutations = alphabet_permutations(CODE_LEN)
     for _ in range(limit):
         code = ''.join(next(permutations))
-        status = Status.NOT_FOUND
-        # todo fetch last status from redis
-        yield PromoCode(code, status)
+        yield PromoCode(code)

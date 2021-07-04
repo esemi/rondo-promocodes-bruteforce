@@ -16,10 +16,10 @@ from crawler.crawler import locate_code_task, prepare_session
 )
 async def test_locate_code_task_smoke(code: str, expected: Status):
     counter = Counter()
-    code = PromoCode(code=code, last_status=Status.NOT_FOUND)
+    code = PromoCode(code, Status.NOT_FOUND)
+    assert code.status == Status.NOT_FOUND
 
     res = await locate_code_task(counter, code, await prepare_session(1))
 
     assert res == expected
-    assert code.current_status == expected
-    assert code.last_status == Status.NOT_FOUND
+    assert code.status == expected

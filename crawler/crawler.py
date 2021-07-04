@@ -7,7 +7,7 @@ from types import MappingProxyType
 import asks
 import trio
 
-from crawler import codes, settings
+from crawler import codes, settings, storage
 
 CONNECTIONS_LIMIT = 10
 CONNECTION_TIMEOUT = 5
@@ -75,7 +75,10 @@ async def locate_code_task(counter: Counter, code: codes.PromoCode, session: ask
     if response_status is codes.Status.FOUND:
         logging.info('potentially valid code found %s', code.code)
 
-    code.current_status = response_status
+    code.status = response_status
+
+    await storage.save_code(code)
+
     return response_status
 
 
@@ -128,7 +131,16 @@ async def main(codes_limit: int) -> Counter:
 
     async with trio.open_nursery() as nursery:
         for code in codes.gen_next_code(codes_limit):
+            await storage.update_code_status(code)
+            if code.status is not None:
+                logging.info('skip code because its already located')
+                continue
+
             nursery.start_soon(locate_code_task, counter, code, session)
+
+    logging.info('crawler.main lookup codes %s', counter)
+
+    # todo impl parse internal codes
     logging.info('crawler.main ended %s', counter)
     return counter
 

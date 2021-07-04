@@ -1,14 +1,14 @@
 import pytest as pytest
 
-from crawler.codes import gen_next_code, Status, PromoCode
+from crawler.codes import gen_next_code, PromoCode
 
 
 def test_happy_path():
     res = next(gen_next_code(1))
 
     assert isinstance(res, PromoCode)
-    assert res.last_status is Status.NOT_FOUND
     assert len(res.code) == 7
+    assert res.status is None
 
 
 @pytest.mark.parametrize(

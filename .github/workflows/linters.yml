@@ -31,7 +31,7 @@ jobs:
 
     - name: Run MyPy
       run: |
-        poetry run mypy crawler/
+        poetry run mypy --ignore-missing-imports crawler/
 
     - name: Run wemake-python-styleguide
       run: |

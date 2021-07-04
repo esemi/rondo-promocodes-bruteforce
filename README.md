@@ -19,7 +19,7 @@ $ poetry install
 
 ### run tests
 ```bash
-$ poetry run mypy crawler/
+$ poetry run mypy --ignore-missing-imports crawler/
 $ poetry run flake8 crawler
 $ poetry run pytest -ra -v --cov=crawler  tests
 ```

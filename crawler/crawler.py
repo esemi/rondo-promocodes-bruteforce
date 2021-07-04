@@ -38,11 +38,11 @@ async def check_code_task(counter: Counter, code: codes.PromoCode) -> codes.Stat
     return codes.Status.NOT_FOUND
 
 
-async def main(limit: int):
+async def main(codes_limit: int):
     logging.info('crawler.main started')
-    counter = Counter()
+    counter: Counter = Counter()
     async with trio.open_nursery() as nursery:
-        for code in codes.gen_next_code(limit):
+        for code in codes.gen_next_code(codes_limit):
             nursery.start_soon(check_code_task, counter, code)
     logging.info('crawler.main ended %s', counter)
 

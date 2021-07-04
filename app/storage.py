@@ -14,13 +14,16 @@ def index_promo_code(code: str) -> str:
 
 async def save_code(code: codes.PromoCode):
     index = index_promo_code(code.code)
+    if not code.status:
+        raise RuntimeError('Not specified promo code status.')
     await redis_pool().set(index, code.status.value)
 
 
 async def fetch_code_status(code: codes.PromoCode) -> Optional[str]:
     index = index_promo_code(code.code)
     index_value = await redis_pool().get(index)
-    return None if not index_value else index_value.decode()
+
+    return index_value if index_value is None else index_value.decode()
 
 
 async def update_code_status(code: codes.PromoCode):

@@ -18,10 +18,11 @@ from app.tasks import _locate_code_request, lookup_codes
 )
 async def test_locate_code_request_smoke(code: str, expected: Status):
     counter = Counter()
+    session = await prepare_session(1)
     code = PromoCode(code, Status.NOT_FOUND)
     assert code.status == Status.NOT_FOUND
 
-    res = await _locate_code_request(counter, code, await prepare_session(1))
+    res = await _locate_code_request(counter, code, session)
 
     assert res == expected
     assert code.status == expected

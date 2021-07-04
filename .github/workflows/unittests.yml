@@ -7,7 +7,8 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
+        redis-version: [5, 6]
 
     runs-on: ${{ matrix.os }}
 
@@ -29,6 +30,11 @@ jobs:
       run: |
         poetry --version
         poetry install
+
+    - name: Start redis server
+      uses: supercharge/redis-github-action@1.1.0
+      with:
+        redis-version: ${{ matrix.redis-version }}
 
     - name: Run tests
       run: poetry run pytest -ra -v --cov=app tests

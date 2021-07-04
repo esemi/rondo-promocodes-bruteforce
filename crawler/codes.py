@@ -1,5 +1,7 @@
 """Operations with promo-code objects."""
-
+import itertools
+import random
+import string
 from dataclasses import dataclass
 from enum import IntEnum, auto
 from typing import Iterator
@@ -19,12 +21,15 @@ class PromoCode:  # noqa: WPS306
     last_status: Status
 
 
-def generate_code() -> str:
-    return 'todo'.zfill(CODE_LEN)
+def alphabet_permutations(repeat: int) -> itertools.product:
+    alphabet = list(string.digits + string.ascii_uppercase)
+    random.shuffle(alphabet)
+    return itertools.product(''.join(alphabet), repeat=repeat)
 
 
 def gen_next_code(limit: int) -> Iterator[PromoCode]:
+    permutations = alphabet_permutations(CODE_LEN)
     for _ in range(limit):
-        code = generate_code()
+        code = ''.join(next(permutations))
         status = Status.NOT_FOUND
         yield PromoCode(code, status)

@@ -31,4 +31,4 @@ jobs:
         poetry install
 
     - name: Run tests
-      run: poetry run pytest -ra -v --cov=crawler tests
+      run: poetry run pytest -ra -v --cov=app tests

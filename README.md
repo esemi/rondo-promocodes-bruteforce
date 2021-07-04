@@ -23,9 +23,9 @@ EOF
 
 ### run tests
 ```bash
-$ poetry run mypy --ignore-missing-imports crawler/
-$ poetry run flake8 crawler
-$ poetry run pytest -ra -v --cov=crawler  tests
+$ poetry run mypy --ignore-missing-imports app/
+$ poetry run flake8 app
+$ poetry run pytest -ra -v --cov=app  tests
 ```
 
 ### run crawling
@@ -38,7 +38,7 @@ $ poetry run TODO
 - ~~unittests~~  
 - ~~linters~~  
 - ~~CI~~  
+- ~~MVP~~
 - parse cli args
 - readme runner
-- MVP
 - deploy to pypi & badges

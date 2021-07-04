@@ -1,6 +1,6 @@
 import pytest as pytest
 
-from crawler.codes import gen_next_code, PromoCode
+from app.codes import gen_next_code, PromoCode
 
 
 def test_happy_path():

@@ -1,6 +1,6 @@
-from crawler.crawler import determine_code_status
+from app.tasks import determine_code_status
 
-from crawler.codes import Status
+from app.codes import Status
 
 
 def test_valid_json():

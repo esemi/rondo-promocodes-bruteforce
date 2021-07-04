@@ -4,7 +4,7 @@ from typing import Iterator
 
 import pytest as pytest
 
-from crawler.codes import alphabet_permutations
+from app.codes import alphabet_permutations
 
 
 @pytest.mark.parametrize(

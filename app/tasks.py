@@ -16,8 +16,9 @@ async def lookup_codes(codes_limit: int, counter: Counter, session: asks.Session
     async with trio.open_nursery() as nursery:
         for code in gen_next_code(codes_limit):
             await update_code_status(code)
+            logging.debug('process code %r', code)
             if code.status is not None:
-                logging.info('skip code %s because its already located', code.code)
+                logging.debug('skip code %s because its already located', code.code)
                 counter['skip'] += 1
                 continue
 
@@ -95,11 +96,13 @@ async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.
     logging.debug('task response %s %s', response, response.text)
 
     response_status = determine_code_status(response.text)
+
     counter[response_status] += 1
     if response_status == Status.FOUND:
         logging.info('potentially valid code found %s', code.code)
 
     code.status = response_status
+    logging.info('parsed code %r', code)
 
     await save_code(code)
 

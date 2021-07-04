@@ -30,7 +30,7 @@ $ poetry run pytest -ra -v --cov=app  tests
 
 ### run crawling
 ```bash
-$ poetry run TODO
+$ poetry run python -m app.rondo_crawler --help
 ```
 
 
@@ -39,6 +39,6 @@ $ poetry run TODO
 - ~~linters~~  
 - ~~CI~~  
 - ~~MVP~~
-- parse cli args
-- readme runner
+- ~~parse cli args~~
+- ~~readme runner~~
 - deploy to pypi & badges

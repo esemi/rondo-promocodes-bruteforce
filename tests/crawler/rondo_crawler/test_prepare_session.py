@@ -1,6 +1,6 @@
 import asks
 
-from app.crawler import prepare_session
+from app.rondo_crawler.crawler import prepare_session
 
 
 async def test_smoke():

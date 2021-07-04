@@ -10,6 +10,7 @@ trio = "^0.19.0"
 asks = "^2.4.12"
 python-dotenv = "^0.18.0"
 redio = "^0.5.2"
+asyncclick = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

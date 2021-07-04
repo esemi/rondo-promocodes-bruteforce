@@ -4,7 +4,7 @@ from collections import Counter
 import pytest as pytest
 
 from app.codes import PromoCode, Status
-from app.crawler import prepare_session
+from app.rondo_crawler.crawler import prepare_session
 from app.tasks import _locate_code_request, lookup_codes
 
 

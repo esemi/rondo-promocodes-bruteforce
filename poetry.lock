@@ -578,6 +578,31 @@ python-versions = "*"
 pytest-cover = "*"
 
 [[package]]
+name = "pytest-trio"
+version = "0.7.0"
+description = "Pytest plugin for trio"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+async_generator = ">=1.9"
+outcome = "*"
+pytest = ">=3.6"
+trio = ">=0.15.0"
+
+[[package]]
+name = "python-dotenv"
+version = "0.18.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pyyaml"
 version = "5.4.1"
 description = "YAML parser and emitter for Python"
@@ -725,7 +750,7 @@ typing_extensions = ">=3.6,<4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "9e6d308eea1be4d25068e459052dc59a77d9dcf7e97b4345f9081ea5b6b5045a"
+content-hash = "d0faea79fbfc9750504860ace1e6a881c03507de8322caa17fef274c4a7fc2fb"
 
 [metadata.files]
 anyio = [
@@ -1049,6 +1074,13 @@ pytest-cover = [
 pytest-coverage = [
     {file = "pytest-coverage-0.0.tar.gz", hash = "sha256:db6af2cbd7e458c7c9fd2b4207cee75258243c8a81cad31a7ee8cfad5be93c05"},
     {file = "pytest_coverage-0.0-py2.py3-none-any.whl", hash = "sha256:dedd084c5e74d8e669355325916dc011539b190355021b037242514dee546368"},
+]
+pytest-trio = [
+    {file = "pytest-trio-0.7.0.tar.gz", hash = "sha256:c01b741819aec2c419555f28944e132d3c711dae1e673d63260809bf92c30c31"},
+]
+python-dotenv = [
+    {file = "python-dotenv-0.18.0.tar.gz", hash = "sha256:effaac3c1e58d89b3ccb4d04a40dc7ad6e0275fda25fd75ae9d323e2465e202d"},
+    {file = "python_dotenv-0.18.0-py2.py3-none-any.whl", hash = "sha256:dd8fe852847f4fbfadabf6183ddd4c824a9651f02d51714fa075c95561959c7d"},
 ]
 pyyaml = [
     {file = "PyYAML-5.4.1-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:3b2b1824fe7112845700f815ff6a489360226a5609b96ec2190a45e62a9fc922"},

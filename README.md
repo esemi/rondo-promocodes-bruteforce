@@ -15,6 +15,10 @@ $ python3.9 -m venv venv
 $ source venv/bin/activate
 $ pip install poetry
 $ poetry install
+cat > .env << EOF
+SESSION_ID="U_PHPSESSID_COOKIE_VALUE_HERE"
+EOF
+
 ```
 
 ### run tests
@@ -31,10 +35,10 @@ $ poetry run TODO
 
 
 ## TODO
-- MVP
-- unittests  
-- linters  
-- CI  
+- ~~unittests~~  
+- ~~linters~~  
+- ~~CI~~  
 - parse cli args
 - readme runner
+- MVP
 - deploy to pypi & badges

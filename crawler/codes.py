@@ -32,4 +32,5 @@ def gen_next_code(limit: int) -> Iterator[PromoCode]:
     for _ in range(limit):
         code = ''.join(next(permutations))
         status = Status.NOT_FOUND
+        # todo fetch last status from redis
         yield PromoCode(code, status)

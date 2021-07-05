@@ -2,8 +2,10 @@
 
 import logging
 from collections import Counter
+from typing import Optional
 
 import asks
+import asks.errors
 import trio
 
 from app.codes import PromoCode, Status, gen_next_code
@@ -69,12 +71,11 @@ async def check_code_task(counter: Counter, code: PromoCode, session: asks.Sessi
     return response_code
 
 
-async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.Session) -> Status:
+async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.Session) -> Optional[Status]:
     """Make check promo-code request."""
     logging.debug('task start %r', code)
 
-    # todo handle exceptions
-    response = await session.get(
+    params = dict(
         path='/vyhra/%s' % code.code,
         timeout=CONNECTION_TIMEOUT,
         follow_redirects=False,
@@ -93,6 +94,13 @@ async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.
             'accept-language': 'en-US,en;q=0.9',
         },
     )
+    try:
+        response = await session.get(**params)
+    except asks.errors.RequestTimeout as exc:
+        logging.warning('task response error %r', exc)
+        counter['timeout'] += 1
+        return None
+
     logging.debug('task response %s %s', response, response.text)
 
     response_status = determine_code_status(response.text)

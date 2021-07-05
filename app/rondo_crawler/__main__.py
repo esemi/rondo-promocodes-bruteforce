@@ -1,5 +1,5 @@
-from app.rondo_crawler.crawler import main
+from app.rondo_crawler.crawler import runner
 
 
 if __name__ == '__main__':
-    main(_anyio_backend="trio")
+    runner(_anyio_backend="trio")

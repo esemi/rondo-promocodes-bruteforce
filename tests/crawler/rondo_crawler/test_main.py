@@ -1,10 +1,6 @@
-from asyncclick.testing import CliRunner
-
-from app.rondo_crawler.crawler import main
+from app.rondo_crawler import crawler
 
 
-async def test_smoke():
-  runner = CliRunner()
-  result = await runner.invoke(main, catch_exceptions=False)
-
-  assert result.exit_code == 0
+async def test_main():
+    res = await crawler.main(2)
+    assert sum(res.values()) == 2

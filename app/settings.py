@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SESSION_ID = os.getenv('SESSION_ID')
+CODE_PREFIX = 'ZRC0'
 REDIS_DST = os.getenv('REDIS_DST', 'redis://localhost/')
 CONNECTIONS_LIMIT = 100
 CONNECTION_TIMEOUT = 5

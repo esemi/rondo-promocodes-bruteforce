@@ -44,6 +44,12 @@ def test_used_code():
     assert r == Status.ALREADY_USED
 
 
+def test_used_code_second():
+    test_response = """Zadejte svůj výherní kód</p><p class="error">Litujeme, ale tento kód byl již využit.</p>"""
+    r = determine_code_status(test_response)
+    assert r == Status.ALREADY_USED
+
+
 def test_found_potentional_valid():
     test_response = """<p class="h2">Zadejte svůj výherní kód z losu.</p>
     <p class="error">Informace o výhře se dozvíte po <a href="/prihlasit/se?backRedir=1">přihlášení</a>.</p>"""

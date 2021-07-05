@@ -9,14 +9,20 @@ import asks.errors
 import trio
 
 from app.codes import PromoCode, Status, gen_next_code
-from app.settings import CONNECTION_AUTH, CONNECTION_TIMEOUT, USER_AGENT
+from app.settings import CONNECTION_AUTH, CONNECTION_TIMEOUT, USER_AGENT, CODE_PREFIX
 from app.storage import save_code, update_code_status
 
 
 async def lookup_codes(codes_limit: int, counter: Counter, session: asks.Session) -> Counter:
     """Lookup potentially valid promo codes."""
     async with trio.open_nursery() as nursery:
-        for code in gen_next_code(codes_limit):
+        code_gen = gen_next_code(codes_limit, CODE_PREFIX)
+        while True:
+            try:
+                code = next(code_gen)
+            except (RuntimeError, StopIteration):
+                break
+
             await update_code_status(code)
             logging.debug('process code %r', code)
             if code.status is not None:
@@ -125,6 +131,9 @@ def determine_code_status(response: str) -> Status:
         return Status.NOT_FOUND
 
     elif 'tímto kódem byl již použitý' in response:
+        return Status.ALREADY_USED
+
+    elif 'ale tento kód byl již využit' in response:
         return Status.ALREADY_USED
 
     elif 'Informace o výhře se dozvíte po ' in response:

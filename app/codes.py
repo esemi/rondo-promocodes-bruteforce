@@ -29,8 +29,8 @@ def alphabet_permutations(repeat: int) -> itertools.product:
     return itertools.product(''.join(alphabet), repeat=repeat)
 
 
-def gen_next_code(limit: int) -> Iterator[PromoCode]:
-    permutations = alphabet_permutations(CODE_LEN)
+def gen_next_code(limit: int, prefix: str = '') -> Iterator[PromoCode]:
+    permutations = alphabet_permutations(CODE_LEN - len(prefix))
     for _ in range(limit):
         code = ''.join(next(permutations))
-        yield PromoCode(code)
+        yield PromoCode(code='%s%s' % (prefix, code))

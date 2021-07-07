@@ -4,19 +4,19 @@ import logging
 from collections import Counter
 from typing import Optional
 
-import asks
-import asks.errors
 import trio
+from asks import Session, errors
 
+from app import settings
 from app.codes import PromoCode, Status, gen_next_code
-from app.settings import CONNECTION_AUTH, CONNECTION_TIMEOUT, USER_AGENT, CODE_PREFIX
+from app.rondo_crawler.parser import ResponseParser
 from app.storage import save_code, update_code_status
 
 
-async def lookup_codes(codes_limit: int, counter: Counter, session: asks.Session) -> Counter:
+async def lookup_codes(codes_limit: int, counter: Counter, session: Session) -> Counter:
     """Lookup potentially valid promo codes."""
     async with trio.open_nursery() as nursery:
-        code_gen = gen_next_code(codes_limit, CODE_PREFIX)
+        code_gen = gen_next_code(codes_limit, settings.CODE_PREFIX)
         while True:
             try:
                 code = next(code_gen)
@@ -34,7 +34,7 @@ async def lookup_codes(codes_limit: int, counter: Counter, session: asks.Session
     return counter
 
 
-async def check_code_task(counter: Counter, code: PromoCode, session: asks.Session) -> Status:
+async def check_code_task(counter: Counter, code: PromoCode, session: Session) -> Status:
     """Make check promo-code request."""
     # todo unittest
     logging.debug('task start')
@@ -42,8 +42,8 @@ async def check_code_task(counter: Counter, code: PromoCode, session: asks.Sessi
     # todo handle exceptions
     response = await session.post(
         follow_redirects=False,
-        timeout=CONNECTION_TIMEOUT,
-        cookies=CONNECTION_AUTH,
+        timeout=settings.CONNECTION_TIMEOUT,
+        cookies=settings.CONNECTION_AUTH,
         persist_cookies=True,
         headers={
             'authority': 'www.rondo.cz',
@@ -52,7 +52,7 @@ async def check_code_task(counter: Counter, code: PromoCode, session: asks.Sessi
             'dnt': '1',
             'x-requested-with': 'XMLHttpRequest',
             'sec-ch-ua-mobile': '?0',
-            'user-agent': USER_AGENT,
+            'user-agent': settings.USER_AGENT,
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
             'sec-fetch-site': 'same-origin',
             'sec-fetch-mode': 'cors',
@@ -67,7 +67,7 @@ async def check_code_task(counter: Counter, code: PromoCode, session: asks.Sessi
     )
     logging.debug('task response %s %s', response, response.text)
 
-    response_code = determine_code_status(response.text)
+    response_code = ResponseParser(response.text).response_status
     counter[response_code] += 1
     if response_code == Status.VALID:
         logging.info('valid code found %s', code.code)
@@ -77,21 +77,21 @@ async def check_code_task(counter: Counter, code: PromoCode, session: asks.Sessi
     return response_code
 
 
-async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.Session) -> Optional[Status]:
+async def _locate_code_request(counter: Counter, code: PromoCode, session: Session) -> Optional[Status]:
     """Make check promo-code request."""
     logging.debug('task start %r', code)
 
-    params = dict(
-        path='/vyhra/%s' % code.code,
-        timeout=CONNECTION_TIMEOUT,
-        follow_redirects=False,
-        headers={
+    request_params = {
+        'path': '/vyhra/%s' % code.code,
+        'timeout': settings.CONNECTION_TIMEOUT,
+        'follow_redirects': False,
+        'headers': {
             'authority': 'www.rondo.cz',
             'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
             'sec-ch-ua-mobile': '?0',
             'dnt': '1',
             'upgrade-insecure-requests': '1',
-            'user-agent': USER_AGENT,
+            'user-agent': settings.USER_AGENT,
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',  # noqa: E501
             'sec-fetch-site': 'none',
             'sec-fetch-mode': 'navigate',
@@ -99,17 +99,17 @@ async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.
             'sec-fetch-dest': 'document',
             'accept-language': 'en-US,en;q=0.9',
         },
-    )
+    }
     try:
-        response = await session.get(**params)
-    except asks.errors.RequestTimeout as exc:
+        response = await session.get(**request_params)
+    except errors.RequestTimeout as exc:
         logging.warning('task response error %r', exc)
         counter['timeout'] += 1
         return None
 
     logging.debug('task response %s %s', response, response.text)
 
-    response_status = determine_code_status(response.text)
+    response_status = ResponseParser(response.text).response_status
 
     counter[response_status] += 1
     if response_status == Status.FOUND:
@@ -121,23 +121,3 @@ async def _locate_code_request(counter: Counter, code: PromoCode, session: asks.
     await save_code(code)
 
     return response_status
-
-
-def determine_code_status(response: str) -> Status:
-    if 'tímto kódem neexistuje' in response:
-        return Status.NOT_FOUND
-
-    elif 'tento dobíjecí kód neexistuje' in response:
-        return Status.NOT_FOUND
-
-    elif 'tímto kódem byl již použitý' in response:
-        return Status.ALREADY_USED
-
-    elif 'ale tento kód byl již využit' in response:
-        return Status.ALREADY_USED
-
-    elif 'Informace o výhře se dozvíte po ' in response:
-        return Status.FOUND
-
-    # todo impl
-    raise NotImplementedError('Invalid response %s' % response)

@@ -7,9 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SESSION_ID = os.getenv('SESSION_ID')
-CODE_PREFIX = 'ZRC0'
+CODE_PREFIX = 'ZRC'
 REDIS_DST = os.getenv('REDIS_DST', 'redis://localhost/')
-CONNECTIONS_LIMIT = 100
+CONNECTIONS_LIMIT = 150
 CONNECTION_TIMEOUT = 5
 USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36'
 CONNECTION_AUTH = MappingProxyType({

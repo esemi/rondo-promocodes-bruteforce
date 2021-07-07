@@ -8,7 +8,7 @@ import asks
 import asyncclick as click
 
 from app.settings import CONNECTIONS_LIMIT
-from app.tasks import lookup_codes
+from app.rondo_crawler.tasks import lookup_codes
 
 
 async def prepare_session(conn_limit: int) -> asks.Session:
@@ -41,8 +41,8 @@ async def main(limit: int) -> Counter:
 
 
 @click.command()
-@click.option("--limit", required=True, default=3, type=int, help='Crawler tasks limit')
-@click.option("--verbose", type=bool, default=False, help="Enables verbose mode")
+@click.option('--limit', required=True, default=3, type=int, help='Crawler tasks limit')
+@click.option('--verbose', type=bool, default=False, help='Enables verbose mode')
 async def runner(limit: int, verbose: bool = False):
     logging.basicConfig(level=logging.DEBUG if verbose else logging.INFO)
     await main(limit)

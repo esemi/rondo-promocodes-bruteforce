@@ -5,7 +5,7 @@ import pytest as pytest
 
 from app.codes import PromoCode, Status
 from app.rondo_crawler.crawler import prepare_session
-from app.tasks import _locate_code_request, lookup_codes
+from app.rondo_crawler.tasks import _locate_code_request, lookup_codes
 
 
 @pytest.mark.parametrize(

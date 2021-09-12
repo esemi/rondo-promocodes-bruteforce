@@ -1,10 +1,7 @@
 Rondo.cz promocodes brut
-
+---
 [![wemake-python-styleguide](https://github.com/esemi/shiny-octo-spork/actions/workflows/linters.yml/badge.svg?branch=master)](https://github.com/esemi/shiny-octo-spork/actions/workflows/linters.yml)
 [![pytest](https://github.com/esemi/shiny-octo-spork/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/esemi/shiny-octo-spork/actions/workflows/unittests.yml)
----
-
-## Project local running
 
 ### install
 ```bash

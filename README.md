@@ -1,4 +1,4 @@
-# shiny-octo-spork
+Rondo.cz promocodes brut
 
 [![wemake-python-styleguide](https://github.com/esemi/shiny-octo-spork/actions/workflows/linters.yml/badge.svg?branch=master)](https://github.com/esemi/shiny-octo-spork/actions/workflows/linters.yml)
 [![pytest](https://github.com/esemi/shiny-octo-spork/actions/workflows/unittests.yml/badge.svg?branch=master)](https://github.com/esemi/shiny-octo-spork/actions/workflows/unittests.yml)
@@ -32,13 +32,3 @@ $ poetry run pytest -ra -v --cov=app  tests
 ```bash
 $ poetry run python -m app.rondo_crawler --help
 ```
-
-
-## TODO
-- ~~unittests~~  
-- ~~linters~~  
-- ~~CI~~  
-- ~~MVP~~
-- ~~parse cli args~~
-- ~~readme runner~~
-- deploy to pypi & badges
